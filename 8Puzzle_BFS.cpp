@@ -14,18 +14,18 @@ bool checkEqual(vector<vector<int>> curr, vector<vector<int>> final)
    return true;
 }
 
-pair<int, int> findBlank(vector<vector<int>> vec)
+pair<int, int> findBlank(vector<vector<int>> curr)
 {
-   pair<int, int> ans;
+   pair<int, int> blank;
    for (int i = 0; i < 3; i++)
    {
       for (int j = 0; j < 3; j++)
       {
-         if (vec[i][j] == 0)
-            ans = {i, j};
+         if (curr[i][j] == 0)
+            blank = {i, j};
       }
    }
-   return ans;
+   return blank;
 }
 
 void printAns(vector<vector<vector<int>>> vec)
@@ -34,9 +34,9 @@ void printAns(vector<vector<vector<int>>> vec)
    {
       for (auto row : mat)
       {
-         for (auto el : row)
+         for (auto element : row)
          {
-            cout << el << " ";
+            cout << element << " ";
          }
          cout << endl;
       }
