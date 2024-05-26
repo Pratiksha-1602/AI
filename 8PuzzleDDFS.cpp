@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void printAss(vector<vector<vector<int>>> &ans) {
+void printAns(vector<vector<vector<int>>> &ans) {
     for (auto mac : ans) {
         for (auto row : mac) {
             for (auto ele : row) {
@@ -40,7 +40,7 @@ bool dfs(vector<vector<int>> &start, vector<vector<int>> &goal, int depth, int r
 
     if (checkEqual(start, goal)) {
         cout << "Possible solution: " << endl;
-        printAss(ans);
+        printAns(ans);
         return true;
     }
 
