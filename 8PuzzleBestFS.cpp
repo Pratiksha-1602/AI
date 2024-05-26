@@ -1,80 +1,96 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int countMisplaced(vector<vector<int>> curr, vector<vector<int>> goal){
-    int count=0;
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            if(curr[i][j]!=0 && curr[i][j] != goal[i][j]){
+int countMisplaced(vector<vector<int>> &curr, vector<vector<int>> &final)
+{
+    int count = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (curr[i][j] != 0 && curr[i][j] != final[i][j])
                 count++;
-            }
         }
     }
     return count;
 }
 
-void printAss(vector<vector<int>> &ans){
-    
-        for(auto row:ans){
-            for(auto ele:row){
-                cout << ele << " ";
-            }
-            cout << endl;
-        }
-        cout<<endl;
-}
-
-pair<int, int> findBlank(vector<vector<int>> curr){
+pair<int, int> findBlank(vector<vector<int>> vec)
+{
     pair<int, int> ans;
-    for(int i=0;i<3;i++){
-        for(int j = 0; j<3;j++){
-            if(curr[i][j] == 0){
-                ans = {i,j};
-                break;
-            }
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (vec[i][j] == 0)
+                ans = {i, j};
         }
     }
     return ans;
 }
 
-void bestFirstSearch(vector<vector<int>> start, vector<vector<int>> goal){
-    // priority_queue<pair<int, vector<vector<int>>>, vector<pair<int, vector<vector<int>>>, greater<>>> pq;
-    priority_queue<pair<int, vector<vector<int>>>, vector<pair<int, vector<vector<int>>>>, greater<>> pq;
-    int h = countMisplaced(start, goal);
-    pq.push({h, start});
-    int delrow[] = {0,1,0,-1};
-    int delcol[] = {1,0,-1,0};
+void printState(vector<vector<int>> state)
+{
+    for (auto row : state)
+    {
+        for (auto el : row)
+        {
+            cout << el << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
 
-    while(!pq.empty()){
+int main()
+{
+    vector<vector<int>> start = {{2, 8, 3},
+                                 {1, 6, 4},
+                                 {7, 0, 5}};
+    vector<vector<int>> final = {{1, 2, 3},
+                                 {8, 0, 4},
+                                 {7, 6, 5}};
+
+    priority_queue<pair<int, vector<vector<int>>>, vector<pair<int, vector<vector<int>>>>, greater<>> pq;
+    int h = countMisplaced(start, final);
+    pq.push({h, start});
+
+    //              R  D   L  U
+    int delrow[] = {0, 1, 0, -1};
+    int delcol[] = {1, 0, -1, 0};
+
+    while (!pq.empty())
+    {
         vector<vector<int>> curr = pq.top().second;
         pq.pop();
-        printAss(curr);
-        h = countMisplaced(curr, goal);
-        cout<<"h = "<<h<<endl;
-        if(h==0){
-            cout<<"Solution found." <<endl;
+        printState(curr);
+
+        h = countMisplaced(curr, final);
+        cout << "h = " << h << endl
+             << endl;
+
+        if (h == 0)
+        {
+            cout << "Solution found!" << endl;
             break;
         }
-        pair<int,int> blank = findBlank(curr);
+
+        pair<int, int> blank = findBlank(curr);
         int row = blank.first;
         int col = blank.second;
-        for(int i=0;i<4;i++){
+
+        for (int i = 0; i < 4; i++)
+        {
             int nrow = row + delrow[i];
             int ncol = col + delcol[i];
-            if(nrow>=0 && nrow<3 && ncol>=0 && ncol<3){
+            if (nrow >= 0 && nrow < 3 && ncol >= 0 && ncol < 3)
+            {
                 swap(curr[row][col], curr[nrow][ncol]);
-                h = countMisplaced(curr, goal);
+                h = countMisplaced(curr, final);
                 pq.push({h, curr});
                 swap(curr[row][col], curr[nrow][ncol]);
             }
         }
     }
-}
-
-int main(){
-    vector<vector<int>> start={{2,8,3},{1,6,4},{7,0,5}};
-    vector<vector<int>> goal={{1,2,3},{8,0,4},{7,6,5}};
-
-    bestFirstSearch(start, goal);
     return 0;
 }
